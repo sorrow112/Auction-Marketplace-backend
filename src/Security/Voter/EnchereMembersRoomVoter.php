@@ -12,7 +12,7 @@ class EnchereMembersRoomVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, ['EDIT', 'REMOVE'])
+        return in_array($attribute, ['EDIT', 'REMOVE', 'POST'])
             && $subject instanceof \App\Entity\EnchereMembersRoom;
     }
 
@@ -26,6 +26,22 @@ class EnchereMembersRoomVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
+            case 'POST':
+                try {
+                    if ($subject->getEnchere()->getUser() === $user) {
+                        return true;
+                    }
+                } catch (\Exception $e) {
+                    if ($subject->getEnchereInverse()->getUser() === $user) {
+                        return true;
+                    }
+                }
+                
+                if ($user->getRoles()== "ROLE_ADMIN") {
+                    return true;
+                }
+                break;
+
             case 'EDIT':
                 // logic to determine if the user can EDIT
                 // return true or false

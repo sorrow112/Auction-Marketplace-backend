@@ -10,7 +10,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource( 
 collectionOperations:[
-    "post"=> ["access_control" => "is_granted('EDIT', previous_object)",],
+    'post'=>["security_post_denormalize" => "is_granted('POST', object)",],
 ],
 itemOperations: [
     'put' => ["access_control" => "is_granted('EDIT', previous_object)",],

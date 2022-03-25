@@ -32,7 +32,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
             'normalisation_context' => ['groups' => ['read:enchereInverse:search']]
         ],
         "get",
-        "post"=> ["security" => "is_granted('ROLE_USER')"],
+        'post'=>["security_post_denormalize" => "is_granted('POST', object)",],
     ],
 
     

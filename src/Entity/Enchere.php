@@ -30,7 +30,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
             'normalisation_context' => ['groups' => ['read:enchere:collection']]
         ],
         "get",
-        "post"=> ["security" => "is_granted('ROLE_USER')"],
+        'post'=>["security_post_denormalize" => "is_granted('POST', object)",],
         'search'=>[
             'path' => '/encheres/search',
             'method' => 'GET',

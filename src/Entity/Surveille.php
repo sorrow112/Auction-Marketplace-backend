@@ -16,7 +16,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
     denormalizationContext: ['groups' => ['write:surveille']],
     collectionOperations:[
         'get',
-        'post'=>["access_control" => "is_granted('EDIT', previous_object)",],
+        'post'=>["security_post_denormalize" => "is_granted('POST', object)",],
 
     ],
     itemOperations: [

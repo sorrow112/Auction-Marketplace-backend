@@ -12,7 +12,7 @@ class SurveilleVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, ['EDIT', 'REMOVE'])
+        return in_array($attribute, ['EDIT', 'REMOVE', "POST"])
             && $subject instanceof \App\Entity\Surveille;
     }
 
@@ -26,6 +26,17 @@ class SurveilleVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
+            case 'POST':
+                // logic to determine if the user can EDIT
+                // return true or false
+                
+                if ($subject->getUser() === $user) {
+                    return true;
+                }
+                elseif ($user->getRoles()== "ROLE_ADMIN") {
+                    return true;
+                }
+                break;
             case 'EDIT':
                 // logic to determine if the user can EDIT
                 // return true or false
