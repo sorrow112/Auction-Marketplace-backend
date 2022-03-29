@@ -20,6 +20,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: EnchereRepository::class)]
 #[ApiResource(
+    mercure:true,
     normalizationContext: ['groups' => ['read:enchere:collection']],
     paginationItemsPerPage:12 ,
     collectionOperations:[

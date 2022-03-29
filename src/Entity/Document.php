@@ -55,7 +55,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
     ]
 ),ApiFilter(
     SearchFilter::class ,
-    properties: ['article' => 'exact']
+    properties: ['article' => 'exact',]
 )]
 class Document
 {

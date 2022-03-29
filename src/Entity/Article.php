@@ -72,7 +72,7 @@ class Article
     private $localisation;
 
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     #[Groups(['read:vente:item', 'read:enchere:item', 'read:article:collection', 'read:enchereInverse:item', 'write:article'])]
     private $fabrication_date;
 
