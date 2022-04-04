@@ -32,7 +32,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
     ]
 )]
 #[ApiFilter(OrderFilter::class, properties: ['date' => 'DESC'])]
-#[ApiFilter(SearchFilter::class, properties: ['enchere' => 'exact', 'user' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties: ['enchere' => 'exact', 'user' => 'exact','enchereInverse' => 'exact'])]
 class Reduction
 {
     #[ORM\Id]

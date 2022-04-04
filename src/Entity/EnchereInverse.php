@@ -70,7 +70,7 @@ class EnchereInverse
     private $quantity;
 
     #[ORM\Column(type: 'float')]
-    #[Groups(['read:enchereInverse:item','write:enchereInverse'])]
+    #[Groups(['read:enchereInverse:collection','write:enchereInverse'])]
     #[Assert\Positive]
     private $initPrice;
 
