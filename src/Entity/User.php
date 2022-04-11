@@ -170,6 +170,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
     #[Groups(['write:user', 'read:user:collection'])]
     private $birthDate;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Notification::class, orphanRemoval: true)]
+    private $notifications;
+
 
     public function __construct()
     {
@@ -187,6 +190,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
         $this->Payed = new ArrayCollection();
         $this->GotPayed = new ArrayCollection();
         $this->isActive = true;
+        $this->notifications = new ArrayCollection();
     }
     
 
@@ -741,6 +745,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
     public function setBirthDate(?\DateTimeInterface $birthDate): self
     {
         $this->birthDate = $birthDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Notification[]
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): self
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications[] = $notification;
+            $notification->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): self
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getUser() === $this) {
+                $notification->setUser(null);
+            }
+        }
 
         return $this;
     }

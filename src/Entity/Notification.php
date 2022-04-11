@@ -2,21 +2,31 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\NotificationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use App\Repository\NotificationRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
 #[ApiResource(
     collectionOperations:[
         "get",
-        "post"
+        "post",
+        "getLast"=>[
+            "path" => "/notificationLast",
+            'method' => "GET",
+            "pagination_items_per_page" => 1,
+        ],
     ],
     itemOperations: [
         'get',
         "delete"
     ]
 )]
+#[ApiFilter(OrderFilter::class, properties: ['date' => 'DESC'])]
+#[ApiFilter(SearchFilter::class, properties: ['user' => 'exact'])]
 class Notification
 {
     #[ORM\Id]
@@ -24,8 +34,6 @@ class Notification
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: Surveille::class, inversedBy: 'notifications')]
-    private $surveille;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $description;
@@ -33,22 +41,18 @@ class Notification
     #[ORM\Column(type: 'string', length: 255)]
     private $title;
 
+    #[ORM\Column(type: 'datetime')]
+    private $date;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'notifications')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $user;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getSurveille(): ?Surveille
-    {
-        return $this->surveille;
-    }
-
-    public function setSurveille(?Surveille $surveille): self
-    {
-        $this->surveille = $surveille;
-
-        return $this;
-    }
 
     public function getDescription(): ?string
     {
@@ -70,6 +74,30 @@ class Notification
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): self
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

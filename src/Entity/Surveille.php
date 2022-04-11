@@ -41,7 +41,7 @@ class Surveille
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'surveilles')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['write:surveille'])]
+    #[Groups(['write:surveille','read:surveille:collection'])]
     private $user;
 
     #[ORM\ManyToOne(targetEntity: Enchere::class, inversedBy: 'surveilles')]
@@ -52,8 +52,6 @@ class Surveille
     #[Groups(['write:surveille', 'read:surveille:collection', 'read:user:collection'])]
     private $enchereInverse;
 
-    #[ORM\OneToMany(mappedBy: 'surveille', targetEntity: Notification::class)]
-    private $notifications;
 
     public function __construct()
     {
@@ -109,25 +107,4 @@ class Surveille
         return $this->notifications;
     }
 
-    public function addNotification(Notification $notification): self
-    {
-        if (!$this->notifications->contains($notification)) {
-            $this->notifications[] = $notification;
-            $notification->setSurveille($this);
-        }
-
-        return $this;
-    }
-
-    public function removeNotification(Notification $notification): self
-    {
-        if ($this->notifications->removeElement($notification)) {
-            // set the owning side to null (unless already changed)
-            if ($notification->getSurveille() === $this) {
-                $notification->setSurveille(null);
-            }
-        }
-
-        return $this;
-    }
 }
