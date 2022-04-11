@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\SurveilleRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
@@ -27,7 +29,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
     ]
         ),ApiFilter(
     SearchFilter::class ,
-    properties: ['user' => 'exact']
+    properties: ['user' => 'exact', 'enchere'=>'exact', 'enchereInverse'=>'exact']
 )]
 class Surveille
 {
@@ -49,6 +51,14 @@ class Surveille
     #[ORM\ManyToOne(targetEntity: EnchereInverse::class, inversedBy: 'surveilles')]
     #[Groups(['write:surveille', 'read:surveille:collection', 'read:user:collection'])]
     private $enchereInverse;
+
+    #[ORM\OneToMany(mappedBy: 'surveille', targetEntity: Notification::class)]
+    private $notifications;
+
+    public function __construct()
+    {
+        $this->notifications = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -87,6 +97,36 @@ class Surveille
     public function setEnchereInverse(?EnchereInverse $enchereInverse): self
     {
         $this->enchereInverse = $enchereInverse;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Notification[]
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): self
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications[] = $notification;
+            $notification->setSurveille($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): self
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getSurveille() === $this) {
+                $notification->setSurveille(null);
+            }
+        }
 
         return $this;
     }
