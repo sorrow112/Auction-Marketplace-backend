@@ -11,6 +11,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
 #[ApiResource(
+    paginationItemsPerPage:10 ,
     collectionOperations:[
         "get",
         "post",

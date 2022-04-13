@@ -4,16 +4,17 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
+use App\Controller\RegisterController;
 use App\Controller\UserDataController;
+use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\RegisterController;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
+use Symfony\Component\Serializer\Annotation\SerializedName;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -21,12 +22,20 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     normalizationContext: ['groups' => ['read:user:collection']],
     denormalizationContext: ['groups' => ['write:user']],
     paginationItemsPerPage:12 ,
+    collectionOperations: [
+        'search'=>[
+            'path' => '/users/search',
+            'method' => 'GET',
+            "pagination_items_per_page" => 5,
+            'normalisation_context' => ['groups' => ['read:users:search']]
+        ],
+        'get',
+        'post'
+    ],
     itemOperations: [
         'put' => ["security" => "is_granted('ROLE_ADMIN') or object == user"],
         'get' => [
             'normalisation_context' => ['groups' => ['read:user:collection', 'read:user:item']],
-            
-            
         ],
         'getData' =>[
             'paginationItemsPerPage'=> false,
@@ -42,8 +51,10 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
             'normalization_context' => ['groups' => 'write:user'],
             'read' => false,
         ]
-    ]
+    ],
+    
 )]
+#[ApiFilter(SearchFilter::class ,properties: ['displayName'=>'partial'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface{
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -69,7 +80,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
     #[Groups(['read:surveille:collection','read:vente:collection', 'write:user', 
     'read:user:collection', 'read:transaction:item', 
     'read:fermeture:collection', 'read:enchere:collection',
-    'read:enchereInverse:collection', 'write:enchere'])]
+    'read:enchereInverse:collection', 'write:enchere','read:users:search'])]
     #[Assert\Length(
         min: 5,
         max: 15,
