@@ -11,7 +11,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
 #[ApiResource(
-    paginationItemsPerPage:10 ,
+    paginationItemsPerPage:5 ,
     collectionOperations:[
         "get",
         "post",
@@ -48,6 +48,12 @@ class Notification
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'notifications')]
     #[ORM\JoinColumn(nullable: false)]
     private $user;
+
+    #[ORM\Column(type: 'integer', length: 255)]
+    private $route;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private $type;
 
     public function getId(): ?int
     {
@@ -99,6 +105,30 @@ class Notification
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getRoute(): ?int
+    {
+        return $this->route;
+    }
+
+    public function setRoute(int $route): self
+    {
+        $this->route = $route;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }
