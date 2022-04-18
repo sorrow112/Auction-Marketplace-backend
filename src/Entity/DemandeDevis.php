@@ -25,12 +25,12 @@ class DemandeDevis
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read:demandeDevis:item'])]
+    #[Groups(['read:demandeDevis:collection'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['write:demandeDevis', 'read:demandeDevis:item'])]
-    private $description_article;
+    #[Groups(['write:demandeDevis', 'read:demandeDevis:collection'])]
+    private $descriptionArticle;
 
     #[ORM\Column(type: 'integer')]
     #[Groups(['write:demandeDevis', 'read:demandeDevis:collection'])]
@@ -56,12 +56,12 @@ class DemandeDevis
 
     public function getDescriptionArticle(): ?string
     {
-        return $this->description_article;
+        return $this->descriptionArticle;
     }
 
-    public function setDescriptionArticle(string $description_article): self
+    public function setDescriptionArticle(string $descriptionArticle): self
     {
-        $this->description_article = $description_article;
+        $this->descriptionArticle = $descriptionArticle;
 
         return $this;
     }

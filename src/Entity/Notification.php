@@ -49,7 +49,7 @@ class Notification
     #[ORM\JoinColumn(nullable: false)]
     private $user;
 
-    #[ORM\Column(type: 'integer', length: 255)]
+    #[ORM\Column(type: 'string', length: 255)]
     private $route;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -109,12 +109,12 @@ class Notification
         return $this;
     }
 
-    public function getRoute(): ?int
+    public function getRoute(): ?string
     {
         return $this->route;
     }
 
-    public function setRoute(int $route): self
+    public function setRoute(string $route): self
     {
         $this->route = $route;
 

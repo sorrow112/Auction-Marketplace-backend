@@ -63,7 +63,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
     , 'read:transaction:item', 'read:panier:collection',
      'read:fermeture:collection','read:user:collection',
      'read:enchere:collection','read:enchereInverse:collection',
-     'write:enchere'])]
+     'write:enchere', 'read:proposition:collection'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -80,7 +80,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
     #[Groups(['read:surveille:collection','read:vente:collection', 'write:user', 
     'read:user:collection', 'read:transaction:item', 
     'read:fermeture:collection', 'read:enchere:collection',
-    'read:enchereInverse:collection', 'write:enchere','read:users:search'])]
+    'read:enchereInverse:collection', 'write:enchere','read:users:search',
+    'read:proposition:collection', 'read:demandeDevis:collection'])]
     #[Assert\Length(
         min: 5,
         max: 15,
