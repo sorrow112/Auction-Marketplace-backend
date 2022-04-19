@@ -56,7 +56,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
     properties: ['category' => 'exact', 'user' => 'exact', 'id' => 'exact', 'article.name' => 'partial']
 )]
 #[ApiFilter(OrderFilter::class, properties: ['endDate'=>'ASC'])]
-#[ApiFilter(DateFilter::class, properties: ['startDate'])]
+#[ApiFilter(DateFilter::class, properties: ['startDate','endDate'])]
 class Enchere
 {
     #[ORM\Id]

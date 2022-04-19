@@ -14,17 +14,19 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: ['groups' => ['write:fermeture']],
     collectionOperations:[
         "get",
-        "post"=> ["security" => "is_granted('ROLE_ADMIN') or object.enchere.user == user or object.enchereInverse.user == user"],
+        'post'=>["security_post_denormalize" => "is_granted('POST', object)",],
     ],
     itemOperations: [
         'get' => [
             'normalisation_context' => ['groups' => ['read:fermeture:collection']]
         ],
-        "put"=> ["security" => "is_granted('ROLE_ADMIN') or object.enchere.user == user or object.enchereInverse.user == user"]
+        'put'=>["security_post_denormalize" => "is_granted('EDIT', object)",]
     ]
 )]
 class Fermeture
 {
+
+    //TODO WORK ON IT WITH INHERITANCE!!
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -52,9 +54,9 @@ class Fermeture
     #[Groups(['read:fermeture:collection', 'write:fermeture'])]
     private $enchereInverse;
 
-    #[ORM\OneToOne(targetEntity: Augmentation::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
     #[Groups(['read:fermeture:collection', 'write:fermeture'])]
-    private $augmentation;
+    private $user;
 
     public function __construct()
     {
@@ -146,14 +148,14 @@ class Fermeture
         return $this;
     }
 
-    public function getAugmentation(): ?Augmentation
+    public function getUser(): ?User
     {
-        return $this->augmentation;
+        return $this->user;
     }
 
-    public function setAugmentation(?Augmentation $augmentation): self
+    public function setUser(?User $user): self
     {
-        $this->augmentation = $augmentation;
+        $this->user = $user;
 
         return $this;
     }
