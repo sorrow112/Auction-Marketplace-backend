@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Controller\PutPassword;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use App\Controller\RegisterController;
@@ -34,6 +35,12 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     ],
     itemOperations: [
         'put' => ["security" => "is_granted('ROLE_ADMIN') or object == user"],
+        'putPassword' => [
+            "security" => "is_granted('ROLE_ADMIN') or object == user",
+            'path' => '/putPassword/{id}',
+            'method'=> 'put',
+            'controller' => PutPassword::class,
+        ],
         'get' => [
             'normalisation_context' => ['groups' => ['read:user:collection', 'read:user:item']],
         ],
@@ -87,10 +94,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
         max: 15,
         minMessage: "le nom d'utlisateur saisit est très court",
         maxMessage: "le nom d'utlisateur saisit est très long",
-    )]
-    #[Assert\Regex(
-        pattern: "/^[A-Za-z][A-Za-z0-9]{5,31}$/",
-        message: "le nom d'utilisateur ne doit pas contenir des characteres speciaux"
     )]
     #[Assert\NotNull]
     private $displayName;
