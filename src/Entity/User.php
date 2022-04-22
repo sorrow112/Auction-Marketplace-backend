@@ -128,10 +128,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
     #[Assert\NotNull]
     private $telephone;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read:vente:item', 'write:user', 'read:user:collection'])]
-    private $avatar;
-
     #[ORM\Column(type: 'json')]
     #[Groups(['write:user', 'read:user:collection'])]
     private $roles = [];
@@ -301,17 +297,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
         return $this;
     }
 
-    public function getAvatar(): ?string
-    {
-        return $this->avatar;
-    }
-
-    public function setAvatar(string $avatar): self
-    {
-        $this->avatar = $avatar;
-
-        return $this;
-    }
 
     /**
      * @see UserInterface

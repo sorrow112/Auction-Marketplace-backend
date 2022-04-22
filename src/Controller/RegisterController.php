@@ -15,26 +15,26 @@ class RegisterController extends AbstractController
 {
     private $entityManager;
     private $validator;
-    public function __construct(ValidatorInterface $validator,EntityManagerInterface $entityManager,private UserPasswordHasherInterface $passwordHasher)
+    public function __construct(EntityManagerInterface $entityManager,private UserPasswordHasherInterface $passwordHasher)
     {
         $this->entityManager = $entityManager;
-        $this->validator = $validator;
     }
     public function __invoke($data)
     {
         //just replacing the plainPassword with a hashed version 
-        $plainPassword = $data->getPassword();
+        try {
+            $plainPassword = $data->getPassword();
         $hashedPassword = $this->passwordHasher->hashPassword(
             $data,
             $plainPassword
         );
         $data->setPassword($hashedPassword);
-        $errors = $this->validator->validate($data);
-        if (count($errors) > 0) {
-            throw new ValidationException($errors);
-        }
         $this->entityManager->persist($data);
         $this->entityManager->flush();
         return json_encode($data);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+        
     }
 }
