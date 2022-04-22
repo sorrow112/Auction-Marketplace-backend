@@ -31,6 +31,7 @@ class RegisterController extends AbstractController
         $data->setPassword($hashedPassword);
         $this->entityManager->persist($data);
         $this->entityManager->flush();
+        //look for RecursiveContextualValidator.php in validator folder in vendor/symfony and change the error message in line 164 to "not an error" exactly like that
         return json_encode($data);
         } catch (\Throwable $th) {
             throw $th;
