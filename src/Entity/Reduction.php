@@ -10,6 +10,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Controller\Reduire;
 
 #[ORM\Entity(repositoryClass: ReductionRepository::class)]
 #[ApiResource(
@@ -23,6 +24,13 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
             "path" => "/reductionLowest",
             'method' => "GET",
             "pagination_items_per_page" => 1,
+        ],
+        "augmenter"=>[
+            "path" => "/reduire",
+            'method' => "POST",
+            'controller' => Reduire::class,
+            'normalization_context' => ['groups' => 'write:reduction'],
+            'read' => false,
         ],
     ],
     itemOperations: [

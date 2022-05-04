@@ -10,7 +10,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-
+use App\Controller\Augmenter;
 
 #[ORM\Entity(repositoryClass: AugmentationRepository::class)]
 #[ApiResource(
@@ -24,6 +24,13 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
             "path" => "/augmentationHighest",
             'method' => "GET",
             "pagination_items_per_page" => 1,
+        ],
+        "augmenter"=>[
+            "path" => "/augmenter",
+            'method' => "POST",
+            'controller' => Augmenter::class,
+            'normalization_context' => ['groups' => 'write:augmentation'],
+            'read' => false,
         ],
     ],
     itemOperations: [

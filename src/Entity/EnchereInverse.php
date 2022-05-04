@@ -32,6 +32,12 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
             "pagination_items_per_page" => 5,
             'normalisation_context' => ['groups' => ['read:enchereInverse:search']]
         ],
+        "getPages"=>[
+            'path' => '/enchere_inverses/pages',
+            'method' => 'GET',
+            "pagination_enabled" => false,
+            'normalization_context' => ['groups' => ['pages']]
+        ],
         "get",
         'post'=>["security_post_denormalize" => "is_granted('POST', object)",],
     ],
@@ -63,7 +69,7 @@ class EnchereInverse
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read:surveille:collection', 'read:fermeture:collection','read:enchereInverse:collection'])]
+    #[Groups(['read:surveille:collection', 'read:fermeture:collection','read:enchereInverse:collection','pages'])]
     private $id;
 
     #[ORM\Column(type: 'integer')]

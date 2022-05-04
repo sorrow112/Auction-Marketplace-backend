@@ -17,10 +17,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Controller\Counting;
+use App\Controller\pagesCounters\PagesNumber;
 
 #[ORM\Entity(repositoryClass: EnchereRepository::class)]
 #[ApiResource(
-    mercure:true,
     normalizationContext: ['groups' => ['read:enchere:collection']],
     paginationItemsPerPage:12 ,
     collectionOperations:[
@@ -29,22 +30,29 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
             'method' => 'GET',
             "pagination_items_per_page" => 4,
             'normalisation_context' => ['groups' => ['read:enchere:collection']]
+        ],        
+        "getPages"=>[
+            'path' => '/encheres/pages',
+            'method' => 'GET',
+            "pagination_enabled" => false,
+            'normalization_context' => ['groups' => ['pages']]
         ],
-        "get",
-        'post'=>["security_post_denormalize" => "is_granted('POST', object)",],
         'search'=>[
             'path' => '/encheres/search',
             'method' => 'GET',
             "pagination_items_per_page" => 5,
             'normalisation_context' => ['groups' => ['read:enchere:search']]
         ],
+        "get",
+        'post'=>["security_post_denormalize" => "is_granted('POST', object)",],
+        "count"=>[
+            "path" => "/count",
+            'method' => "GET",
+            'controller' =>Counting::class,
+        ]
+
     ],
     itemOperations: [
-        "put_price"=>[
-            "path" => "/encheresBid/{id}",
-            'method' => "PUT",
-            "denormalisation_context" => ['groups'=>["bid"]],
-        ],
         'put' => ["access_control" => "is_granted('EDIT', previous_object)",],
         'delete'=> ["access_control" => "is_granted('REMOVE', previous_object)",],
         'get' => [
@@ -62,7 +70,7 @@ class Enchere
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read:surveille:collection', 'read:fermeture:collection','read:enchere:collection'])]
+    #[Groups(['read:surveille:collection', 'read:fermeture:collection','read:enchere:collection','pages'])]
     private $id;
 
     #[ORM\Column(type: 'integer')]
@@ -80,20 +88,20 @@ class Enchere
     #[Assert\Positive]
     private $immediatePrice;
 
-    // #[ORM\Column(type: 'float')]
-    // #[Groups(['read:enchere:collection',"bid", 'read:surveille:collection',"read:enchere:item", 'read:enchere:search'])]
-    // #[Assert\Positive]
-    // private $currentPrice;
+    #[ORM\Column(type: 'float')]
+    #[Groups(['read:enchere:collection',"bid", 'read:surveille:collection',"read:enchere:item", 'read:enchere:search'])]
+    #[Assert\Positive]
+    private $currentPrice;
 
     #[ORM\Column(type: 'datetime')]
     #[Groups(['read:enchere:collection',"read:enchere:item"])]
-    // #[Assert\GreaterThan('today')]
+    #[Assert\GreaterThan('today')]
     private $startDate;
 
     #[ORM\Column(type: 'datetime')]
     #[Groups(['read:surveille:collection','read:enchere:collection',"read:enchere:item"])]
     // TODO: line commented for testing purposes
-    // #[Assert\GreaterThan('today')]
+    #[Assert\GreaterThan('today')]
     private $endDate;
 
     #[ORM\OneToMany(mappedBy: 'enchere', targetEntity: Surveille::class)]
@@ -196,17 +204,17 @@ class Enchere
         return $this;
     }
 
-    // public function getCurrentPrice(): ?float
-    // {
-    //     return $this->currentPrice;
-    // }
+    public function getCurrentPrice(): ?float
+    {
+        return $this->currentPrice;
+    }
 
-    // public function setCurrentPrice(float $currentPrice): self
-    // {
-    //     $this->currentPrice = $currentPrice;
+    public function setCurrentPrice(float $currentPrice): self
+    {
+        $this->currentPrice = $currentPrice;
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
     public function getStartDate(): ?\DateTimeInterface
     {
