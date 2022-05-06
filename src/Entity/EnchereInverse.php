@@ -20,10 +20,10 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
     normalizationContext: ['groups' => ['read:enchereInverse:collection']],
     paginationItemsPerPage:12 ,
     collectionOperations:[
-        'getFour'=>[
-            'path' => '/enchere_inverses/getFour',
+        'getEight'=>[
+            'path' => '/enchere_inverses/getEight',
             'method' => 'GET',
-            "pagination_items_per_page" => 4,
+            "pagination_items_per_page" => 8,
             'normalisation_context' => ['groups' => ['read:enchereInverse:collection']]
         ],
         'search'=>[

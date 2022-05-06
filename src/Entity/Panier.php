@@ -5,21 +5,12 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PanierRepository;
 use Doctrine\Common\Collections\Collection;
-use ApiPlatform\Core\Annotation\ApiResource;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PanierRepository::class)]
-#[ApiResource(
-    normalizationContext: ['groups' => ['read:panier:collection']],
-    denormalizationContext: ['groups' => ['write:panier']],
-    itemOperations: [
-        'delete',
-        'get' => [
-            'normalisation_context' => ['groups' => ['read:panier:collection']]
-        ]
-    ]
-)]
+
 class Panier
 {
     #[ORM\Id]

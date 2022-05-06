@@ -3,22 +3,11 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Core\Annotation\ApiResource;
+
 use App\Repository\EnchereMembersRoomRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 
-#[ApiResource( 
-collectionOperations:[
-    'post'=>["security_post_denormalize" => "is_granted('POST', object)",],
-],
-itemOperations: [
-    'put' => ["access_control" => "is_granted('EDIT', previous_object)",],
-    'delete'=> ["access_control" => "is_granted('REMOVE', previous_object)",],
-    'get' => [
-        'normalisation_context' => ['groups' => ['read:room:item']]
-    ],
-])]
 #[ORM\Entity(repositoryClass: EnchereMembersRoomRepository::class)]
 class EnchereMembersRoom
 {

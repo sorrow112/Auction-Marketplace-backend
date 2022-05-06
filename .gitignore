@@ -13,6 +13,8 @@
 /node_modules/
 /public/build/
 /public/media/
+/public/user/
+/public/category/
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###

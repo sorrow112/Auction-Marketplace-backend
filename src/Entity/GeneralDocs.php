@@ -3,22 +3,22 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\DocumentRepository;
+use App\Repository\GeneralDocsRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
-use App\Controller\CreateMediaObjectAction;
+
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
-use Symfony\Component\Validator\Constraints as Assert;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Controller\GeneralDocController;
 
 /**
  * @Vich\Uploadable
  */
-#[ORM\Entity(repositoryClass: DocumentRepository::class)]
+#[ORM\Entity(repositoryClass: GeneralDocsRepository::class)]
 #[ApiResource(
     iri: 'http://schema.org/MediaObject',
     itemOperations: [
@@ -28,9 +28,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
         'get',
         'post' => [
             "security" => "is_granted('ROLE_USER')",
-            'controller' => CreateMediaObjectAction::class,
+            'controller' => GeneralDocController::class,
             'deserialize' => false,
-            'validation_groups' => ['Default', 'document:write'],
             'openapi_context' => [
                 'requestBody' => [
                     'content' => [
@@ -42,9 +41,6 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
                                         'type' => 'string',
                                         'format' => 'binary',
                                     ],
-                                    'article' => [
-                                        'type' => "string",
-                                    ]
                                 ],
                             ],
                         ],
@@ -53,30 +49,25 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
             ],
         ],
     ]
-),ApiFilter(
-    SearchFilter::class ,
-    properties: ['article' => 'exact',]
 )]
-class Document
+class GeneralDocs
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     #[ApiProperty(iri: 'http://schema.org/contentUrl')]
-    #[Groups(['read:vente:item', 'read:document','read:enchere:item', 'read:enchereInverse:item'])]
+    #[Groups(['read:document','read:enchere:item', 'read:enchereInverse:item'])]
     private $id;
 
 
     #[ApiProperty(iri: 'http://schema.org/contentUrl')]
-    #[Groups(['media_object:read','read:surveille:collection','read:enchere:collection','read:enchereInverse:collection'])]
+    #[Groups(['media_object:read','read:category:collection'])]
     public ?string $contentUrl = null;
 
     #[ORM\Column(nullable: true)] 
-    #[Groups(['media_object:read','read:surveille:collection','read:enchere:collection','read:enchereInverse:collection'])]
+    #[Groups(['media_object:read','read:category:collection'])]
     public ?string $filePath = null;
 
-    #[ORM\ManyToOne(targetEntity: Article::class, inversedBy: 'documents')]
-    private $article;
 
     /**
      * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
@@ -90,18 +81,6 @@ class Document
     }
 
 
-    public function getArticle(): ?Article
-    {
-        return $this->article;
-    }
-
-    public function setArticle(?Article $article): self
-    {
-        $this->article = $article;
-
-        return $this;
-    }
-    
     public function getFile()
     {
         return $this->file;

@@ -90,12 +90,9 @@ class Article
 
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: Document::class)]
     #[ORM\JoinColumn(nullable: true)]
-    #[Groups(['read:vente:item', 'read:enchere:item', 'read:enchereInverse:item', 'write:article'])]
+    #[Groups(['read:enchereInverse:collection','read:surveille:collection' ,'read:enchere:collection', 'write:article'])]
     private $documents;
 
-
-    #[ORM\OneToOne(mappedBy: 'article', targetEntity: Vente::class, cascade: ['persist', 'remove'])]
-    private $vente;
 
     #[ORM\Column(type: 'text', nullable: true)]
     #[Groups(['read:vente:item', 'read:enchere:item', 'read:article:collection', 'read:enchereInverse:item', 'write:article'])]
@@ -216,22 +213,7 @@ class Article
 
 
 
-    public function getVente(): ?Vente
-    {
-        return $this->vente;
-    }
-
-    public function setVente(Vente $vente): self
-    {
-        // set the owning side of the relation if necessary
-        if ($vente->getArticle() !== $this) {
-            $vente->setArticle($this);
-        }
-
-        $this->vente = $vente;
-
-        return $this;
-    }
+    
 
     public function getDescription(): ?string
     {

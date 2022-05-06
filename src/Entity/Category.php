@@ -2,13 +2,23 @@
 
 namespace App\Entity;
 
+use DateTime;
+
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Serializer\Annotation\Groups;
 
+use Symfony\Component\Serializer\Annotation\Groups;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Vich\UploaderBundle\Mapping\Annotation\Uploadable;
+
+
+/**
+ * @Vich\Uploadable
+ */
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ApiResource(
     normalizationContext: ['groups' => ['read:category:collection']],
@@ -43,14 +53,25 @@ class Category
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: EnchereInverse::class)]
     private $enchereInverses;
 
-    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Vente::class)]
-    private $ventes;
+
+    // #[ORM\OneToOne(mappedBy: 'image',targetEntity: GeneralDocs::class, cascade: ['persist', 'remove'])]
+    #[Groups(['read:category:collection', 'write:category', 'read:enchere:item' , 'read:enchereInverse:item' ,'read:enchereInverse:item'])]
+    #[ORM\Column(type: 'string', length: 255)]
+    private $image;
+    
+        /**
+     * @Vich\UploadableField(mapping="category", fileNameProperty="image")
+     */
+    public ?File $file = null;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $updatedAt;
 
     public function __construct()
     {
         $this->encheres = new ArrayCollection();
         $this->enchereInverses = new ArrayCollection();
-        $this->ventes = new ArrayCollection();
+        $this->updatedAt = new DateTime();
     }
 
 
@@ -68,6 +89,32 @@ class Category
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    public function setFile($file): self
+    {
+        $this->file = $file;
+        if ($file){
+            $this->updatedAt = new DateTime();
+        }
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }
@@ -132,32 +179,27 @@ class Category
         return $this;
     }
 
-    /**
-     * @return Collection|Vente[]
-     */
-    public function getVentes(): Collection
+    
+    // public function getImage(): ?GeneralDocs
+    // {
+    //     return $this->image;
+    // }
+
+    // public function setImage(?GeneralDocs $image): self
+    // {
+    //     $this->image = $image;
+
+    //     return $this;
+    // }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
-        return $this->ventes;
+        return $this->updatedAt;
     }
 
-    public function addVente(Vente $vente): self
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
-        if (!$this->ventes->contains($vente)) {
-            $this->ventes[] = $vente;
-            $vente->setCategory($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVente(Vente $vente): self
-    {
-        if ($this->ventes->removeElement($vente)) {
-            // set the owning side to null (unless already changed)
-            if ($vente->getCategory() === $this) {
-                $vente->setCategory(null);
-            }
-        }
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

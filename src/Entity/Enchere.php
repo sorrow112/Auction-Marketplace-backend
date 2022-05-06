@@ -25,10 +25,10 @@ use App\Controller\pagesCounters\PagesNumber;
     normalizationContext: ['groups' => ['read:enchere:collection']],
     paginationItemsPerPage:12 ,
     collectionOperations:[
-        'getFour'=>[
-            'path' => '/encheres/getFour',
+        'getEight'=>[
+            'path' => '/encheres/getEight',
             'method' => 'GET',
-            "pagination_items_per_page" => 4,
+            "pagination_items_per_page" => 8,
             'normalisation_context' => ['groups' => ['read:enchere:collection']]
         ],        
         "getPages"=>[

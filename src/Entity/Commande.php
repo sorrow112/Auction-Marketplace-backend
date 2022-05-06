@@ -4,22 +4,10 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CommandeRepository;
-use ApiPlatform\Core\Annotation\ApiResource;
-use DateTime;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
-#[ApiResource(
-    normalizationContext: ['groups' => ['read:commande:collection']],
-    denormalizationContext: ['groups' => ['write:commande']],
-    itemOperations: [
-        'delete',
-        'put',
-        'get' => [
-            'normalisation_context' => ['groups' => ['read:commande:collection']]
-        ]
-    ]
-)]
+
 class Commande
 {
     #[ORM\Id]

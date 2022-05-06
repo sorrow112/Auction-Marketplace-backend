@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use DateTime;
+use Serializable;
 use App\Controller\PutPassword;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
@@ -10,14 +12,21 @@ use App\Controller\UserDataController;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation\Uploadable;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
+
+/**
+ * @Vich\Uploadable
+ */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
     normalizationContext: ['groups' => ['read:user:collection']],
@@ -66,8 +75,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read:vente:item', 'read:vente:collection'
-    , 'read:transaction:item', 'read:panier:collection',
+    #[Groups([
+    'read:transaction:item', 'read:panier:collection',
      'read:fermeture:collection','read:user:collection',
      'read:enchere:collection','read:enchereInverse:collection',
      'write:enchere', 'read:proposition:collection'])]
@@ -84,7 +93,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
     private $name;
 
     #[ORM\Column(type: 'string', length: 20)]
-    #[Groups(['read:surveille:collection','read:vente:collection', 'write:user', 
+    #[Groups(['read:surveille:collection', 'write:user', 
     'read:user:collection', 'read:transaction:item', 
     'read:fermeture:collection', 'read:enchere:collection',
     'read:enchereInverse:collection', 'write:enchere','read:users:search',
@@ -162,21 +171,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Augmentation::class, orphanRemoval: true)]
     private $augmentations;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Vente::class)]
-    private $ventes;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Panier::class)]
-    private $paniers;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Commande::class)]
-    private $commandes;
-
-    #[ORM\OneToMany(mappedBy: 'transmitter', targetEntity: Transaction::class)]
-    private $Payed;
-
-    #[ORM\OneToMany(mappedBy: 'transmittedTo', targetEntity: Transaction::class)]
-    private $GotPayed;
-
     #[ORM\Column(type: 'datetime', nullable: true)]
     #[Groups(['write:user', 'read:user:collection'])]
     private $birthDate;
@@ -184,6 +178,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Notification::class, orphanRemoval: true)]
     private $notifications;
 
+    
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['write:user', 'read:user:collection'])]
+    private $image = 'defaultAvatar.jpg';
+    
+    /**
+     * @Vich\UploadableField(mapping="user", fileNameProperty="image")
+     */
+    public ?File $file = null;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $updatedAt;
 
     public function __construct()
     {
@@ -195,15 +201,51 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
         $this->surveilles = new ArrayCollection();
         $this->reductions = new ArrayCollection();
         $this->augmentations = new ArrayCollection();
-        $this->ventes = new ArrayCollection();
         $this->paniers = new ArrayCollection();
         $this->commandes = new ArrayCollection();
         $this->Payed = new ArrayCollection();
         $this->GotPayed = new ArrayCollection();
         $this->isActive = true;
+        $this->updatedAt = new DateTime();
         $this->notifications = new ArrayCollection();
     }
     
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    public function setFile($file): self
+    {
+        $this->file = $file;
+        if ($file){
+            $this->updatedAt = new DateTime();
+        }
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
 
     public function getId(): ?int
     {
@@ -569,155 +611,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
         return $this;
     }
 
-    /**
-     * @return Collection|Vente[]
-     */
-    public function getVentes(): Collection
-    {
-        return $this->ventes;
-    }
 
-    public function addVente(Vente $vente): self
-    {
-        if (!$this->ventes->contains($vente)) {
-            $this->ventes[] = $vente;
-            $vente->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVente(Vente $vente): self
-    {
-        if ($this->ventes->removeElement($vente)) {
-            // set the owning side to null (unless already changed)
-            if ($vente->getUser() === $this) {
-                $vente->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Panier[]
-     */
-    public function getPaniers(): Collection
-    {
-        return $this->paniers;
-    }
-
-    public function addPanier(Panier $panier): self
-    {
-        if (!$this->paniers->contains($panier)) {
-            $this->paniers[] = $panier;
-            $panier->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removePanier(Panier $panier): self
-    {
-        if ($this->paniers->removeElement($panier)) {
-            // set the owning side to null (unless already changed)
-            if ($panier->getUser() === $this) {
-                $panier->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Commande[]
-     */
-    public function getCommandes(): Collection
-    {
-        return $this->commandes;
-    }
-
-    public function addCommande(Commande $commande): self
-    {
-        if (!$this->commandes->contains($commande)) {
-            $this->commandes[] = $commande;
-            $commande->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCommande(Commande $commande): self
-    {
-        if ($this->commandes->removeElement($commande)) {
-            // set the owning side to null (unless already changed)
-            if ($commande->getUser() === $this) {
-                $commande->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Transaction[]
-     */
-    public function getPayed(): Collection
-    {
-        return $this->Payed;
-    }
-
-    public function addPayed(Transaction $payed): self
-    {
-        if (!$this->Payed->contains($payed)) {
-            $this->Payed[] = $payed;
-            $payed->setTransmitter($this);
-        }
-
-        return $this;
-    }
-
-    public function removePayed(Transaction $payed): self
-    {
-        if ($this->Payed->removeElement($payed)) {
-            // set the owning side to null (unless already changed)
-            if ($payed->getTransmitter() === $this) {
-                $payed->setTransmitter(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Transaction[]
-     */
-    public function getGotPayed(): Collection
-    {
-        return $this->GotPayed;
-    }
-
-    public function addGotPayed(Transaction $gotPayed): self
-    {
-        if (!$this->GotPayed->contains($gotPayed)) {
-            $this->GotPayed[] = $gotPayed;
-            $gotPayed->setTransmittedTo($this);
-        }
-
-        return $this;
-    }
-
-    public function removeGotPayed(Transaction $gotPayed): self
-    {
-        if ($this->GotPayed->removeElement($gotPayed)) {
-            // set the owning side to null (unless already changed)
-            if ($gotPayed->getTransmittedTo() === $this) {
-                $gotPayed->setTransmittedTo(null);
-            }
-        }
-
-        return $this;
-    }
+    
     /**
      * Returning a salt is only needed, if you are not using a modern
      * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
