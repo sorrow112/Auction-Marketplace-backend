@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     denormalizationContext: ['groups' => ['write:proposition']],
     collectionOperations:[
         "propositionTable"=>[
-            "path" => "/demandesTable",
+            "path" => "/propositionsTable",
             'method' => "GET",
             "pagination_items_per_page" => 15,
         ],
@@ -51,6 +51,7 @@ class Proposition
     private $enchere;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['read:proposition:collection'])]
     private $date;
 
     public function __construct()

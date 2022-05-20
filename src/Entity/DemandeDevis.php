@@ -59,6 +59,7 @@ class DemandeDevis
     private $transmittedTo;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['read:demandeDevis:collection'])]
     private $date;
 
     public function __construct()

@@ -23,7 +23,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
         'getEight'=>[
             'path' => '/enchere_inverses/getEight',
             'method' => 'GET',
-            "pagination_items_per_page" => 8,
+            "pagination_items_per_page" => 6,
             'normalisation_context' => ['groups' => ['read:enchereInverse:collection']]
         ],
         'search'=>[

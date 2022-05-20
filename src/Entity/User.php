@@ -39,6 +39,12 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
             "pagination_items_per_page" => 5,
             'normalisation_context' => ['groups' => ['read:users:search']]
         ],
+        "getPages"=>[
+            'path' => '/users/pages',
+            'method' => 'GET',
+            "pagination_enabled" => false,
+            'normalization_context' => ['groups' => ['pages']]
+        ],
         'get',
         'post'
     ],
@@ -79,7 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
     'read:transaction:item', 'read:panier:collection',
      'read:fermeture:collection','read:user:collection',
      'read:enchere:collection','read:enchereInverse:collection',
-     'write:enchere', 'read:proposition:collection', 'read:demandeDevis:collection'])]
+     'write:enchere', 'read:proposition:collection', 'read:demandeDevis:collection', 'pages'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]

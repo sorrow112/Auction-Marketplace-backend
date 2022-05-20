@@ -50,7 +50,7 @@ class Article
         'read:vente:collection', 'read:enchere:collection',
          'read:article:collection', 'read:enchereInverse:collection',
           'read:surveille:collection', 'read:panier:collection',
-           'read:fermeture:collection', 'write:article', 'read:enchereInverse:search'
+           'read:fermeture:collection', 'read:proposition:collection','write:article', 'read:enchereInverse:search'
     ])]
     #[Assert\Length(
         min: 3,

@@ -29,7 +29,7 @@ use App\Controller\pagesCounters\PagesNumber;
         'getEight'=>[
             'path' => '/encheres/getEight',
             'method' => 'GET',
-            "pagination_items_per_page" => 8,
+            "pagination_items_per_page" => 6,
             'normalisation_context' => ['groups' => ['read:enchere:collection']]
         ],        
         "getPages"=>[
@@ -71,7 +71,7 @@ class Enchere
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read:surveille:collection', 'read:fermeture:collection','read:enchere:collection','pages'])]
+    #[Groups(['read:surveille:collection','read:proposition:collection', 'read:fermeture:collection','read:enchere:collection','pages'])]
     private $id;
 
     #[ORM\Column(type: 'integer')]
@@ -117,7 +117,7 @@ class Enchere
 
     #[ORM\OneToOne(targetEntity: Article::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['read:enchere:collection', 'read:surveille:collection',"read:enchere:item",'read:fermeture:collection', 'read:enchereInverse:search'])]
+    #[Groups(['read:enchere:collection','read:proposition:collection', 'read:surveille:collection',"read:enchere:item",'read:fermeture:collection', 'read:enchereInverse:search'])]
     private $article;
 
     #[ORM\Column(type: 'datetime')]
