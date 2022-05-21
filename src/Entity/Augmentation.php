@@ -25,6 +25,17 @@ use App\Controller\Augmenter;
             'method' => "GET",
             "pagination_items_per_page" => 1,
         ],
+        "augmentationsTable"=>[
+            "path" => "/augmentationsTable",
+            'method' => "GET",
+            "pagination_items_per_page" => 15,
+        ],
+        "getPages"=>[
+            'path' => '/augmentations/pages',
+            'method' => 'GET',
+            "pagination_enabled" => false,
+            'normalization_context' => ['groups' => ['pages']]
+        ],
         "augmenter"=>[
             "path" => "/augmenter",
             'method' => "POST",
@@ -46,7 +57,7 @@ class Augmentation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read:augmentation:collection'])]
+    #[Groups(['read:augmentation:collection','pages'])]
     private $id;
 
     #[ORM\Column(type: 'float')]

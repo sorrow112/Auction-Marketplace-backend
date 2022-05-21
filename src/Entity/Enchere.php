@@ -85,7 +85,6 @@ class Enchere
     private $initPrice;
 
     #[ORM\Column(type: 'float')]
-    #[Groups(['read:enchere:collection',"read:enchere:item"])]
     #[Assert\Positive]
     private $immediatePrice;
 

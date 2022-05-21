@@ -25,6 +25,17 @@ use App\Controller\Reduire;
             'method' => "GET",
             "pagination_items_per_page" => 1,
         ],
+        "reductionsTable"=>[
+            "path" => "/reductionsTable",
+            'method' => "GET",
+            "pagination_items_per_page" => 15,
+        ],
+        "getPages"=>[
+            'path' => '/reductions/pages',
+            'method' => 'GET',
+            "pagination_enabled" => false,
+            'normalization_context' => ['groups' => ['pages']]
+        ],
         "augmenter"=>[
             "path" => "/reduire",
             'method' => "POST",
@@ -46,7 +57,7 @@ class Reduction
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read:reduction:collection'])]
+    #[Groups(['read:reduction:collection','pages'])]
     private $id;
 
     #[ORM\Column(type: 'float')]

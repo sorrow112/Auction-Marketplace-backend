@@ -84,8 +84,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
     #[Groups([
     'read:transaction:item', 'read:panier:collection',
      'read:fermeture:collection','read:user:collection',
-     'read:enchere:collection','read:enchereInverse:collection',
-     'write:enchere', 'read:proposition:collection', 'read:demandeDevis:collection', 'pages'])]
+     'read:enchere:collection','read:enchereInverse:collection','read:augmentation:collection',
+     'write:enchere', 'read:proposition:collection', 'read:demandeDevis:collection', 'pages','read:reduction:collection'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -102,8 +102,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
     #[Groups(['read:surveille:collection', 'write:user', 
     'read:user:collection', 'read:transaction:item', 
     'read:fermeture:collection', 'read:enchere:collection',
-    'read:enchereInverse:collection', 'write:enchere','read:users:search',
-    'read:proposition:collection', 'read:demandeDevis:collection'])]
+    'read:enchereInverse:collection', 'write:enchere','read:users:search','read:augmentation:collection',
+    'read:proposition:collection', 'read:demandeDevis:collection','read:reduction:collection'])]
     #[Assert\Length(
         min: 5,
         max: 15,
@@ -129,7 +129,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['write:user', 'read:user:collection'])]
+    #[Groups(['write:user', 'read:user:collection','read:reduction:collection', 'read:augmentation:collection'])]
     #[Assert\Length(
         min: 8,
         max: 8,

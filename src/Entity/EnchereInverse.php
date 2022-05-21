@@ -83,7 +83,6 @@ class EnchereInverse
     private $initPrice;
 
     #[ORM\Column(type: 'float')]
-    #[Groups(['read:enchereInverse:collection','write:enchereInverse'])]
     #[Assert\Positive]
     private $immediatePrice;
 
