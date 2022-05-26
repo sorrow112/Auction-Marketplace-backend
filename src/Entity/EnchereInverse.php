@@ -112,7 +112,7 @@ class EnchereInverse
 
     #[ORM\OneToMany(mappedBy: 'enchereInverse', targetEntity: Reduction::class, orphanRemoval: true)]
     private $reductions;
-
+    #[Groups(['read:enchereInverse:collection'])]
     #[ORM\OneToOne(inversedBy: 'enchereInverse', targetEntity: Fermeture::class, cascade: ['persist', 'remove'])]
     private $fermeture;
 

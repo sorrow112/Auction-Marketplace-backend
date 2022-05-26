@@ -30,7 +30,7 @@ class Fermeture
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read:fermeture:collection'])]
+    #[Groups(['read:fermeture:collection','read:enchere:collection',"read:enchere:item",'read:enchereInverse:collection'])]
     private $id;
 
     #[ORM\Column(type: 'datetime')]
@@ -54,7 +54,7 @@ class Fermeture
     #[Groups(['read:fermeture:collection', 'write:fermeture'])]
     private $enchereInverse;
 
-    #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
     #[Groups(['read:fermeture:collection', 'write:fermeture'])]
     private $user;
 

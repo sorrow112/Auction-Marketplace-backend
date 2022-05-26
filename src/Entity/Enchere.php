@@ -106,7 +106,7 @@ class Enchere
 
     #[ORM\OneToMany(mappedBy: 'enchere', targetEntity: Surveille::class)]
     private $surveilles;
-
+    #[Groups(['read:enchere:collection',"read:enchere:item"])]
     #[ORM\OneToOne(inversedBy: 'enchere', targetEntity: Fermeture::class, cascade: ['persist', 'remove'])]
     private $fermeture;
 
