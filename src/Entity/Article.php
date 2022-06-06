@@ -88,7 +88,7 @@ class Article
     #[Groups(['read:vente:item', 'read:enchere:item', 'read:article:collection', 'read:enchereInverse:item', 'write:article'])]
     private $codebar;
 
-    #[ORM\OneToMany(mappedBy: 'article', targetEntity: Document::class)]
+    #[ORM\OneToMany(mappedBy: 'article', targetEntity: Document::class, orphanRemoval: true)]
     #[ORM\JoinColumn(nullable: true)]
     #[Groups(['read:enchereInverse:collection','read:surveille:collection' ,'read:enchere:collection', 'write:article'])]
     private $documents;

@@ -197,6 +197,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $updatedAt;
 
+    #[Groups(['write:user', 'read:user:collection', 'read:demandeDevis:collection'])]
+    #[ORM\OneToOne(targetEntity: GeneralDocs::class, cascade: ['persist', 'remove'])]
+    private $avatar;
+
+
     public function __construct()
     {
         $this->demandeDevisTransmis = new ArrayCollection();
@@ -214,6 +219,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
         $this->isActive = true;
         $this->updatedAt = new DateTime();
         $this->notifications = new ArrayCollection();
+
     }
     
     public function getUpdatedAt(): ?\DateTimeInterface
@@ -679,4 +685,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
 
         return $this;
     }
+    public function getAvatar(): ?GeneralDocs
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(GeneralDocs $avatar): self
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    
 }

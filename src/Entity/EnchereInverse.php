@@ -107,7 +107,7 @@ class EnchereInverse
     #[Groups(['read:enchereInverse:collection', 'read:surveille:collection', 'read:fermeture:collection', 'read:enchereInverse:search'])]
     private $article;
 
-    #[ORM\OneToMany(mappedBy: 'enchereInverse', targetEntity: Surveille::class)]
+    #[ORM\OneToMany(mappedBy: 'enchereInverse', targetEntity: Surveille::class, orphanRemoval: true)]
     private $surveilles;
 
     #[ORM\OneToMany(mappedBy: 'enchereInverse', targetEntity: Reduction::class, orphanRemoval: true)]

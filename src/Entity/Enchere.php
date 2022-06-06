@@ -104,7 +104,7 @@ class Enchere
     #[Assert\GreaterThan('today')]
     private $endDate;
 
-    #[ORM\OneToMany(mappedBy: 'enchere', targetEntity: Surveille::class)]
+    #[ORM\OneToMany(mappedBy: 'enchere', targetEntity: Surveille::class, orphanRemoval: true)]
     private $surveilles;
     #[Groups(['read:enchere:collection',"read:enchere:item"])]
     #[ORM\OneToOne(inversedBy: 'enchere', targetEntity: Fermeture::class, cascade: ['persist', 'remove'])]

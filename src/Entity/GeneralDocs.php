@@ -61,11 +61,11 @@ class GeneralDocs
 
 
     #[ApiProperty(iri: 'http://schema.org/contentUrl')]
-    #[Groups(['media_object:read','read:category:collection'])]
+    #[Groups(['media_object:read','read:category:collection','read:user:collection'])]
     public ?string $contentUrl = null;
 
     #[ORM\Column(nullable: true)] 
-    #[Groups(['media_object:read','read:category:collection'])]
+    #[Groups(['media_object:read','read:category:collection','read:user:collection'])]
     public ?string $filePath = null;
 
 
@@ -73,6 +73,8 @@ class GeneralDocs
      * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
      */
     public ?File $file = null;
+
+
     
     
     public function getId(): ?int
@@ -92,4 +94,6 @@ class GeneralDocs
 
         return $this;
     }
+
+    
 }
