@@ -82,7 +82,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     #[Groups([
-    'read:transaction:item', 'read:panier:collection',
      'read:fermeture:collection','read:user:collection',
      'read:enchere:collection','read:enchereInverse:collection','read:augmentation:collection',
      'write:enchere', 'read:proposition:collection', 'read:demandeDevis:collection', 'pages','read:reduction:collection'])]
@@ -100,7 +99,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
 
     #[ORM\Column(type: 'string', length: 20)]
     #[Groups(['read:surveille:collection', 'write:user', 
-    'read:user:collection', 'read:transaction:item', 
+    'read:user:collection', 
     'read:fermeture:collection', 'read:enchere:collection',
     'read:enchereInverse:collection', 'write:enchere','read:users:search','read:augmentation:collection',
     'read:proposition:collection', 'read:demandeDevis:collection','read:reduction:collection'])]
@@ -212,8 +211,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface{
         $this->surveilles = new ArrayCollection();
         $this->reductions = new ArrayCollection();
         $this->augmentations = new ArrayCollection();
-        $this->paniers = new ArrayCollection();
-        $this->commandes = new ArrayCollection();
+
         $this->Payed = new ArrayCollection();
         $this->GotPayed = new ArrayCollection();
         $this->isActive = true;

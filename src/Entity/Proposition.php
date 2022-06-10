@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PropositionRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PropositionRepository::class)]
@@ -28,6 +31,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ]
     ]
 )]
+#[ApiFilter(OrderFilter::class, properties: ['date' => 'DESC'])]
+#[ApiFilter(SearchFilter::class, properties: ['transmittedTo' => 'exact'])]
 class Proposition
 {
     #[ORM\Id]
@@ -47,6 +52,7 @@ class Proposition
     private $transmittedTo;
 
     #[ORM\ManyToOne(targetEntity: Enchere::class)]
+    #[ORM\JoinColumn(nullable: true)]
     #[Groups(['write:proposition', 'read:proposition:collection'])]
     private $enchere;
 

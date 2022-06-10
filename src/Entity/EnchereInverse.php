@@ -93,7 +93,6 @@ class EnchereInverse
 
     #[ORM\Column(type: 'datetime')]
     #[Groups(['read:enchereInverse:collection', 'write:enchereInverse'])]
-    #[Assert\GreaterThan('today')]
     private $startDate;
 
 
@@ -113,7 +112,7 @@ class EnchereInverse
     #[ORM\OneToMany(mappedBy: 'enchereInverse', targetEntity: Reduction::class, orphanRemoval: true)]
     private $reductions;
     #[Groups(['read:enchereInverse:collection'])]
-    #[ORM\OneToOne(inversedBy: 'enchereInverse', targetEntity: Fermeture::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'enchereInverse', targetEntity: Fermeture::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
     private $fermeture;
 
     #[ORM\Column(type: 'datetime')]
@@ -132,8 +131,6 @@ class EnchereInverse
     #[Groups(['read:enchereInverse:item','write:enchereInverse'])]
     private $category;
 
-    #[ORM\OneToOne(mappedBy: 'EnchereInverse', targetEntity: EnchereMembersRoom::class, cascade: ['persist', 'remove'])]
-    private $MembersRoom;
 
 
     public function __construct()
@@ -354,25 +351,5 @@ class EnchereInverse
         return $this;
     }
 
-    public function getMembersRoom(): ?EnchereMembersRoom
-    {
-        return $this->MembersRoom;
-    }
-
-    public function setMembersRoom(?EnchereMembersRoom $MembersRoom): self
-    {
-        // unset the owning side of the relation if necessary
-        if ($MembersRoom === null && $this->MembersRoom !== null) {
-            $this->MembersRoom->setEnchereInverse(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($MembersRoom !== null && $MembersRoom->getEnchereInverse() !== $this) {
-            $MembersRoom->setEnchereInverse($this);
-        }
-
-        $this->MembersRoom = $MembersRoom;
-
-        return $this;
-    }
+    
 }

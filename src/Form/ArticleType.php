@@ -19,7 +19,6 @@ class ArticleType extends AbstractType
             ->add('brand')
             ->add('codebar')
             ->add('description')
-            ->add('vente')
         ;
     }
 

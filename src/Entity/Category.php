@@ -56,7 +56,7 @@ class Category
 
     // #[ORM\OneToOne(mappedBy: 'image',targetEntity: GeneralDocs::class, cascade: ['persist', 'remove'])]
     #[Groups(['read:category:collection', 'write:category', 'read:enchere:item' , 'read:enchereInverse:item' ,'read:enchereInverse:item'])]
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $image = "";
     
         /**
@@ -69,6 +69,7 @@ class Category
 
     public function __construct()
     {
+        $this->image= "";
         $this->encheres = new ArrayCollection();
         $this->enchereInverses = new ArrayCollection();
         $this->updatedAt = new DateTime();
@@ -112,9 +113,14 @@ class Category
         return $this->image;
     }
 
-    public function setImage(string $image): self
+    public function setImage(?string $image): self
     {
-        $this->image = $image;
+        if($image == null){
+            $this->image ="";
+        }else{
+            $this->image = $image;
+        }
+        
 
         return $this;
     }

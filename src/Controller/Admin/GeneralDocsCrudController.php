@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\GeneralDocs;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
@@ -15,6 +17,7 @@ class GeneralDocsCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return GeneralDocs::class;
+        
     }
 
     
@@ -24,6 +27,14 @@ class GeneralDocsCrudController extends AbstractCrudController
         yield TextField::new('filePath')->setFormTypeOption('disabled','disabled');
         
         yield TextareaField::new('file')->setFormType(VichImageType::class);
+    }
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+        // ...
+        ->disable(Action::NEW, Action::DELETE)
+
+    ;
     }
     
 }

@@ -22,9 +22,9 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         yield TextField::new('email')->setFormTypeOption('disabled','disabled');
-        yield TextField::new('image')->setFormTypeOption('disabled','disabled');
+        // yield TextField::new('image')->setFormTypeOption('disabled','disabled');
         yield BooleanField::new('isActive');
-        yield TextareaField::new('file')->setFormType(VichImageType::class);
+        // yield TextareaField::new('file')->setFormType(VichImageType::class);
     }
     public function configureActions(Actions $actions): Actions
     {

@@ -17,6 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         'post'=>["security_post_denormalize" => "is_granted('POST', object)",],
     ],
     itemOperations: [
+        'delete',
         'get' => [
             'normalisation_context' => ['groups' => ['read:fermeture:collection']]
         ],
@@ -54,9 +55,6 @@ class Fermeture
     #[Groups(['read:fermeture:collection', 'write:fermeture'])]
     private $enchereInverse;
 
-    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
-    #[Groups(['read:fermeture:collection', 'write:fermeture'])]
-    private $user;
 
     public function __construct()
     {
@@ -148,15 +146,4 @@ class Fermeture
         return $this;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
 }

@@ -45,6 +45,7 @@ use App\Controller\Reduire;
         ],
     ],
     itemOperations: [
+        'delete',
         'get' => [
             'normalisation_context' => ['groups' => ['read:reduction:collection']]
         ]

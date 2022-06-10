@@ -95,7 +95,6 @@ class Enchere
 
     #[ORM\Column(type: 'datetime')]
     #[Groups(['read:enchere:collection',"read:enchere:item"])]
-    #[Assert\GreaterThan('today')]
     private $startDate;
 
     #[ORM\Column(type: 'datetime')]
@@ -107,7 +106,7 @@ class Enchere
     #[ORM\OneToMany(mappedBy: 'enchere', targetEntity: Surveille::class, orphanRemoval: true)]
     private $surveilles;
     #[Groups(['read:enchere:collection',"read:enchere:item"])]
-    #[ORM\OneToOne(inversedBy: 'enchere', targetEntity: Fermeture::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'enchere', targetEntity: Fermeture::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private $fermeture;
 
     #[ORM\OneToMany(mappedBy: 'enchere', targetEntity: Augmentation::class, orphanRemoval: true)]
@@ -135,8 +134,6 @@ class Enchere
     #[Groups(['read:enchere:item','read:enchere:collection'])]
     private $category;
 
-    #[ORM\OneToOne(mappedBy: 'enchere', targetEntity: EnchereMembersRoom::class, cascade: ['persist', 'remove'])]
-    private $membersRoom;
 
  
 
@@ -360,20 +357,4 @@ class Enchere
         return $this;
     }
 
-    public function getMembersRoom(): ?EnchereMembersRoom
-    {
-        return $this->membersRoom;
-    }
-
-    public function setMembersRoom(EnchereMembersRoom $membersRoom): self
-    {
-        // set the owning side of the relation if necessary
-        if ($membersRoom->getEnchere() !== $this) {
-            $membersRoom->setEnchere($this);
-        }
-
-        $this->membersRoom = $membersRoom;
-
-        return $this;
-    }
 }

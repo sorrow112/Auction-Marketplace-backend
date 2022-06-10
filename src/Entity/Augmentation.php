@@ -45,6 +45,7 @@ use App\Controller\Augmenter;
         ],
     ],
     itemOperations: [
+        'delete',
         'get' => [
             'normalisation_context' => ['groups' => ['read:augmentation:collection']]
         ]

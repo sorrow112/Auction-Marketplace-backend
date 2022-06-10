@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\DemandeDevisRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -31,6 +34,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         ]
     ]
 )]
+#[ApiFilter(OrderFilter::class, properties: ['date' => 'DESC'])]
+#[ApiFilter(SearchFilter::class, properties: ['transmittedTo' => 'exact'])]
 class DemandeDevis
 {
     #[ORM\Id]
